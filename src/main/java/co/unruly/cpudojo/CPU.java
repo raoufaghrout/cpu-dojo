@@ -1,5 +1,7 @@
 package co.unruly.cpudojo;
 
+import static co.unruly.cpudojo.Operation.getOperationFromOpCode;
+
 public class CPU {
 
     private Integer[] memory;
@@ -22,5 +24,9 @@ public class CPU {
         return registerA;
     }
 
-    public void start() {}
+    public void start() {
+        Operation operation = getOperationFromOpCode(memory[0]);
+        programCounter += operation.getLength();
+        this.registerA = memory[1];
+    }
 }
