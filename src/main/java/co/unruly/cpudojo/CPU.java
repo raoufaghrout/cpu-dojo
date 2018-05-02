@@ -1,32 +1,52 @@
 package co.unruly.cpudojo;
 
 import static co.unruly.cpudojo.Operation.getOperationFromOpCode;
+import static java.lang.System.exit;
 
 public class CPU {
 
-    private Integer[] memory;
-    private Integer registerA;
-    private Integer programCounter = 0;
+    private int[] memory;
+    private int registerA;
+    private int programCounter;
 
-    public CPU(Integer[] memory) {
+    public CPU(int[] memory) {
         this.memory = memory;
     }
 
-    public Integer[] getMemory() {
+    public int[] getMemory() {
         return memory;
     }
 
-    public Integer getProgramCounter() {
+    public int getProgramCounter() {
         return programCounter;
     }
 
-    public Integer getRegisterA() {
+    public int getRegisterA() {
         return registerA;
     }
 
     public void start() {
-        Operation operation = getOperationFromOpCode(memory[0]);
-        programCounter += operation.getLength();
-        this.registerA = memory[1];
+        for (int i = 0; i < memory.length; i++) {
+            Operation operation = getOperationFromOpCode(memory[i]);
+            programCounter = i;
+            System.out.println(programCounter);
+
+            switch (operation) {
+                case BRK:
+                    exit(0);
+                case LDA:
+                    this.registerA = memory[i + 1];
+                    i += 1;
+                    break;
+                case ADC:
+                    this.registerA += memory[i + 1];
+                    i += 1;
+                    break;
+                case STA:
+                    memory[memory[i + 1]] = registerA;
+                    i += 1;
+                    break;
+            }
+        }
     }
 }
